@@ -1158,7 +1158,8 @@ private:
             }
         };
 
-        _response.reset(new Response(onFinished));
+        _response.reset();
+        _response = std::make_shared<Response>(onFinished);
 
         _request = std::move(req);
 

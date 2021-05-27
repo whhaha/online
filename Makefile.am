@@ -150,7 +150,8 @@ if ENABLE_LIBFUZZER
 noinst_PROGRAMS += \
 		   admin_fuzzer \
 		   clientsession_fuzzer \
-		   httpresponse_fuzzer
+		   httpresponse_fuzzer \
+		   httpecho_fuzzer
 else
 noinst_PROGRAMS += loolwsd_fuzzer
 endif
@@ -213,6 +214,17 @@ httpresponse_fuzzer_SOURCES = \
 			       $(shared_sources) \
 			       fuzzer/HttpResponse.cpp
 httpresponse_fuzzer_LDFLAGS = -fsanitize=fuzzer $(AM_LDFLAGS)
+
+httpecho_fuzzer_CPPFLAGS = \
+				-DKIT_IN_PROCESS=1 \
+				$(AM_CPPFLAGS) \
+        -I${top_srcdir}/test
+httpecho_fuzzer_SOURCES = \
+			       $(loolwsd_sources) \
+			       $(loolforkit_sources) \
+			       $(shared_sources) \
+			       fuzzer/HttpEcho.cpp
+httpecho_fuzzer_LDFLAGS = -fsanitize=fuzzer $(AM_LDFLAGS)
 
 clientnb_SOURCES = net/clientnb.cpp \
                    common/DummyTraceEventEmitter.cpp \

@@ -811,7 +811,7 @@ fi
 AC_MSG_CHECKING([whether to turn sanitizers on])
 if test "x$with_sanitizer" != "x"; then
     AC_MSG_RESULT([yes ($with_sanitizer)])
-    SANITIZER_FLAGS="-O1 -fno-omit-frame-pointer -fsanitize=$with_sanitizer -frtti -static-libasan"
+    SANITIZER_FLAGS="-O1 -fno-omit-frame-pointer -fsanitize=$with_sanitizer -frtti"
     CXXFLAGS="$CXXFLAGS $SANITIZER_FLAGS"
     CFLAGS="$CFLAGS $SANITIZER_FLAGS"
 else
@@ -821,7 +821,7 @@ fi
 AC_MSG_CHECKING([whether to build fuzzers])
 if test "$enable_fuzzers" = "yes"; then
     AC_MSG_RESULT([yes])
-    LIBFUZZER_FLAGS="-fsanitize=fuzzer-no-link"
+    LIBFUZZER_FLAGS="-fsanitize=fuzzer-no-link,address"
     CXXFLAGS="$CXXFLAGS $LIBFUZZER_FLAGS"
     CFLAGS="$CFLAGS $LIBFUZZER_FLAGS"
     LIBFUZZER=1
