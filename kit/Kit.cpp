@@ -580,6 +580,12 @@ public:
                 "] url [" << anonymizeUrl(_url) << "] on child [" << _jailId <<
                 "] and id [" << _docId << "].");
         assert(_loKit);
+#ifdef __ANDROID__
+        if (singletonDocument != nullptr)
+        {
+            delete singletonDocument;
+        }
+#endif
         assert(singletonDocument == nullptr);
         singletonDocument = this;
     }
@@ -600,6 +606,8 @@ public:
         {
             session.second->resetDocManager();
         }
+
+        singletonDocument = nullptr;
 
 #ifdef IOS
         deallocateDocumentDataForMobileAppDocId(_mobileAppDocId);
