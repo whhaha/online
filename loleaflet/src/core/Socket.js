@@ -433,6 +433,15 @@ app.definitions.Socket = L.Class.extend({
 		if (e.textMsg.indexOf(' nopng') !== -1)
 			return;
 
+		// pass deltas through quickly.
+		if (e.imgBytes && e.imgBytes[e.imgIndex] === 68 /* D */)
+		{
+			console.log2('Passed through delta object');
+			e.image = e.imgBytes.subarray(e.imgIndex);
+			e.imageIsComplete = true;
+			return;
+		}
+
 		var that = this;
 		var img = this._extractImage(e);
 		e.image = new Image();
