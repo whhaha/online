@@ -273,6 +273,8 @@ private:
     std::shared_ptr<SocketPoll> _socketPoll; //< Poll thread for async http comm.
 };
 
+struct TileData;
+
 /// Derive your WSD unit test / hooks from me.
 class UnitWSD : public UnitBase
 {
@@ -351,7 +353,7 @@ public:
     /// Called before the lookupTile call returns. Should always be called to fire events.
     virtual void lookupTile(int part, int width, int height, int tilePosX, int tilePosY,
                             int tileWidth, int tileHeight,
-                            std::shared_ptr<std::vector<char>> &tile);
+                            std::shared_ptr<TileData> &tile);
 
     // ---------------- DocumentBroker hooks ----------------
     virtual bool filterLoad(const std::string& /* sessionId */,

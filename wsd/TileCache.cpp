@@ -151,17 +151,16 @@ int TileCache::getTileBeingRenderedVersion(const TileDesc& tile)
     return tileBeingRendered ? tileBeingRendered->getVersion() : 0;
 }
 
-TileCache::Tile TileCache::lookupTile(const TileDesc& tile)
+Tile TileCache::lookupTile(const TileDesc& tile)
 {
     if (_dontCache)
-        return TileCache::Tile();
+        return Tile();
 
-    TileCache::Tile ret = findTile(tile);
+    Tile ret = findTile(tile);
 
     UnitWSD::get().lookupTile(tile.getPart(), tile.getWidth(), tile.getHeight(),
                               tile.getTilePosX(), tile.getTilePosY(),
-                              tile.getTileWidth(), tile.getTileHeight(),
-                              ret->_deltas[0] /* FIXME */);
+                              tile.getTileWidth(), tile.getTileHeight(), ret);
 
     return ret;
 }
@@ -280,7 +279,7 @@ void TileCache::saveStream(StreamType type, const std::string& name, const char 
     saveDataToStreamCache(type, name, data, size);
 }
 
-TileCache::Blob TileCache::lookupCachedStream(StreamType type, const std::string& name)
+Blob TileCache::lookupCachedStream(StreamType type, const std::string& name)
 {
     auto it = _streamCache[type].find(name);
     if (it != _streamCache[type].end())
@@ -289,7 +288,7 @@ TileCache::Blob TileCache::lookupCachedStream(StreamType type, const std::string
         return it->second;
     }
 
-    return TileCache::Blob();
+    return Blob();
 }
 
 void TileCache::invalidateTiles(int part, int x, int y, int width, int height, int normalizedViewId)
@@ -516,7 +515,7 @@ void TileCache::assertCorrectThread()
     assert (correctThread);
 }
 
-TileCache::Tile TileCache::findTile(const TileDesc &desc)
+Tile TileCache::findTile(const TileDesc &desc)
 {
     const auto it = _cache.find(desc);
     if (it != _cache.end() && it->first.getNormalizedViewId() == desc.getNormalizedViewId())
@@ -525,7 +524,7 @@ TileCache::Tile TileCache::findTile(const TileDesc &desc)
         return it->second;
     }
 
-    return TileCache::Tile();
+    return Tile();
 }
 
 void TileCache::saveDataToCache(const TileDesc &desc, const char *data, const size_t size)
@@ -535,9 +534,9 @@ void TileCache::saveDataToCache(const TileDesc &desc, const char *data, const si
 
     ensureCacheSize();
 
-    auto blob = std::make_shared<TileCache::BlobData>(size);
+    auto blob = std::make_shared<BlobData>(size);
     std::memcpy(blob->data(), data, size);
-    TileCache::Tile tile = std::make_shared<TileData>(0 /* FIXME */, blob);
+    Tile tile = std::make_shared<TileData>(0 /* FIXME */, blob);
     auto res = _cache.emplace(desc, tile);
     if (!res.second)
     {
@@ -640,7 +639,7 @@ void TileCache::saveDataToStreamCache(StreamType type, const std::string &fileNa
     if (_dontCache)
         return;
 
-    TileCache::Blob blob = std::make_shared<BlobData>(size);
+    Blob blob = std::make_shared<BlobData>(size);
     std::memcpy(blob->data(), data, size);
     _streamCache[type][fileName] = blob;
 }
