@@ -5713,6 +5713,13 @@ L.CanvasTileLayer = L.Layer.extend({
 			return;
 		}
 
+		// be sure canvas is initialized already and has correct size
+		var size = map.getSize();
+		if (size.x === 0 || size.y === 0) {
+			setTimeout(function () { this._update(); }.bind(this), 1);
+			return;
+		}
+
 		if (center === undefined) { center = map.getCenter(); }
 		if (zoom === undefined) { zoom = Math.round(map.getZoom()); }
 
